@@ -30,7 +30,7 @@ namespace GestionnaireBDD
                     IdManif = Convert.ToInt32(dr[0].ToString()),
                     NomManif = dr[1].ToString(),
                     DateDebutManif = dr[2].ToString(),
-                    DateFinManif = dr[3].ToString(),
+                    DateFinManif = dr[3].ToString(), 
                     //LaSalle
                     //Latitude = Convert.ToDouble(dr[4].ToString()),
                     //Longitude = Convert.ToDouble(dr[5].ToString())
