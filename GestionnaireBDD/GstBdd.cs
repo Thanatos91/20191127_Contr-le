@@ -34,7 +34,7 @@ namespace GestionnaireBDD
                 Manifestation uneManif = new Manifestation()
                 {
                     IdManif = Convert.ToInt32(dr[0].ToString()),
-                    NomManif = dr[1].ToString(),
+                    NomManif = dr[1].ToString(),    
                     DateDebutManif = dr[2].ToString(),
                     DateFinManif = dr[3].ToString(),
                     LaSalle = uneSalle
@@ -48,15 +48,21 @@ namespace GestionnaireBDD
         public List<Place> GetAllPlacesByIdManifestation(int idManif,int idSalle)
         {
             List<Place> lesPlaces = new List<Place>();
-            cmd = new MySqlCommand("SELECT * FROM manifestation INNER JOIN occuper ON idManif = numManif INNER JOIN place on numPlace = place.idPlace WHERE idManif = "+ idManif +" AND place.numSalle = "+idSalle+" ", cnx);
+            cmd = new MySqlCommand("SELECT idPlace, numTarif, libre FROM manifestation INNER JOIN occuper ON idManif = numManif INNER JOIN place on numPlace = place.idPlace WHERE idManif = " + idManif +" AND place.numSalle = "+idSalle+" ", cnx);
             dr = cmd.ExecuteReader();
+            char etat = 'o';
             while (dr.Read())
             {
+                if(Convert.ToBoolean(dr[2].ToString()) == false)
+                {
+                    etat = 'l';
+                }
                 Place unePlace = new Place()
                 {
-                    IdPlace = Convert.ToInt32(dr[9].ToString()),
-                    CodeTarif = Convert.ToChar(dr[11].ToString()),
-                    Occupee = Convert.ToBoolean(dr[8].ToString())
+                    IdPlace = Convert.ToInt32(dr[0].ToString()),
+                    CodeTarif = Convert.ToChar(dr[1].ToString()),
+                    Occupee = Convert.ToBoolean(dr[2].ToString()),  
+                    Etat = etat
                 };  
                 lesPlaces.Add(unePlace);
             }
@@ -85,7 +91,8 @@ namespace GestionnaireBDD
 
         public void ReserverPlace(int idPlace, int idSalle,int idManif)
         {
-            
+            cmd = new MySqlCommand("UPDATE occuper SET libre = 1 WHERE numManif= "+ idManif +" AND numPlace= "+ idPlace +" AND numSalle= "+ idSalle +" ", cnx);
+            cmd.ExecuteNonQuery();
         }
     }
 }

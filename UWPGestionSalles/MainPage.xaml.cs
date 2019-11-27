@@ -35,7 +35,23 @@ namespace UWPGestionSalles
 
         private async void btnReserver_Click(object sender, RoutedEventArgs e)
         {
-            
+            if(lstManifs.SelectedItem != null)
+            {
+                if(gvPlaces.SelectedItem != null)
+                {
+                    
+                }
+                else
+                {
+                    var dialog = new MessageDialog("Sélectionnez une place");
+                    await dialog.ShowAsync();
+                }
+            }
+            else
+            {
+                var dialog = new MessageDialog("Sélectionnez une manifestation");
+                await dialog.ShowAsync();
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -50,12 +66,15 @@ namespace UWPGestionSalles
             if (lstManifs.SelectedItem != null)
             {
                 gvPlaces.ItemsSource = GstBdd.GetAllPlacesByIdManifestation((lstManifs.SelectedItem as Manifestation).IdManif, idSalle:(lstManifs.SelectedItem as Manifestation).LaSalle.IdSalle);
+                txtNomSalle.Text = (lstManifs.SelectedItem as Manifestation).LaSalle.NomSalle;
+                txtNumSalle.Text = (lstManifs.SelectedItem as Manifestation).LaSalle.IdSalle.ToString();
+                txtNbPlaces.Text = (lstManifs.SelectedItem as Manifestation).LaSalle.NbPlaces.ToString();
             }
         }
 
         private async void gvPlaces_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txtTotal;
-        }
-    }
+            
+        } 
+    }   
 }
