@@ -9,5 +9,10 @@ namespace ClassesMetier
         public int IdSalle { get; set; }
         public string NomSalle { get; set; }
         public int NbPlaces { get; set; }
+
+        public static implicit operator List<object>(Salle v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

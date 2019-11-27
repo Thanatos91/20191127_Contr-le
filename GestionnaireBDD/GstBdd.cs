@@ -21,38 +21,66 @@ namespace GestionnaireBDD
         public List<Manifestation> GetAllManifestations()
         {
             List<Manifestation> lesManifs = new List<Manifestation>();
-            cmd = new MySqlCommand("SELECT * FROM manifestation", cnx);
+            cmd = new MySqlCommand("SELECT idManif, nomManif, dateDebut, dateFin, idSalle, nomSalle, nbPlaces FROM manifestation INNER JOIN salle ON idSalle = numSalle", cnx);
             dr = cmd.ExecuteReader();
             while (dr.Read())
             {
+                Salle uneSalle = new Salle()
+                {
+                    IdSalle = Convert.ToInt32(dr[4].ToString()),
+                    NomSalle = dr[5].ToString(),
+                    NbPlaces = Convert.ToInt32(dr[6].ToString())
+                };
                 Manifestation uneManif = new Manifestation()
                 {
                     IdManif = Convert.ToInt32(dr[0].ToString()),
                     NomManif = dr[1].ToString(),
                     DateDebutManif = dr[2].ToString(),
-                    DateFinManif = dr[3].ToString(), 
-                    //LaSalle
-                    //Latitude = Convert.ToDouble(dr[4].ToString()),
-                    //Longitude = Convert.ToDouble(dr[5].ToString())
+                    DateFinManif = dr[3].ToString(),
+                    LaSalle = uneSalle
                 };
                 lesManifs.Add(uneManif);
             }
             dr.Close();
             return lesManifs;
-
-
-
-            return null;
         }
 
         public List<Place> GetAllPlacesByIdManifestation(int idManif,int idSalle)
         {
-            return null;
+            List<Place> lesPlaces = new List<Place>();
+            cmd = new MySqlCommand("SELECT * FROM manifestation INNER JOIN occuper ON idManif = numManif INNER JOIN place on numPlace = place.idPlace WHERE idManif = "+ idManif +" AND place.numSalle = "+idSalle+" ", cnx);
+            dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Place unePlace = new Place()
+                {
+                    IdPlace = Convert.ToInt32(dr[9].ToString()),
+                    CodeTarif = Convert.ToChar(dr[11].ToString()),
+                    Occupee = Convert.ToBoolean(dr[8].ToString())
+                };  
+                lesPlaces.Add(unePlace);
+            }
+            dr.Close();
+            return lesPlaces;
         }
 
         public List<Tarif> GetAllTarifs()
         {
-            return null;
+            List<Tarif> lesTarifs = new List<Tarif>();
+            cmd = new MySqlCommand("SELECT * FROM tarif", cnx);
+            dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Tarif unTarif = new Tarif()
+                {
+                    IdTarif = Convert.ToChar(dr[0].ToString()),
+                    NomTarif = dr[1].ToString(),
+                    Prix = Convert.ToDouble(dr[2].ToString())
+                };
+                lesTarifs.Add(unTarif);
+            }
+            dr.Close();
+            return lesTarifs;
         }
 
         public void ReserverPlace(int idPlace, int idSalle,int idManif)

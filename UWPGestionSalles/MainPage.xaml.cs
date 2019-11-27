@@ -31,6 +31,8 @@ namespace UWPGestionSalles
             this.InitializeComponent();
         }
 
+        GstBdd GstBdd;
+
         private async void btnReserver_Click(object sender, RoutedEventArgs e)
         {
             
@@ -38,17 +40,22 @@ namespace UWPGestionSalles
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            GstBdd = new GstBdd();
+            lstManifs.ItemsSource = GstBdd.GetAllManifestations();
+            lstTarifs.ItemsSource = GstBdd.GetAllTarifs();
         }
 
         private void lstManifs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            if (lstManifs.SelectedItem != null)
+            {
+                gvPlaces.ItemsSource = GstBdd.GetAllPlacesByIdManifestation((lstManifs.SelectedItem as Manifestation).IdManif, idSalle:(lstManifs.SelectedItem as Manifestation).LaSalle.IdSalle);
+            }
         }
 
         private async void gvPlaces_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            txtTotal;
         }
     }
 }
